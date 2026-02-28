@@ -56,8 +56,10 @@ export async function checkAndConsumeQuota(userId: string): Promise<boolean> {
 
     if (!record) return false;
 
-    // TODO: Handle premium tier logic in the future
-    if (record.tier === 'free' && record.chat_count >= MAX_FREE_CHAT) {
+    // Tier-based logic
+    if (record.tier === 'pro') {
+        // 'pro' tier is unlimited
+    } else if (record.tier === 'free' && record.chat_count >= MAX_FREE_CHAT) {
         return false;
     }
 

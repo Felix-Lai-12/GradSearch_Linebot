@@ -159,6 +159,17 @@ export function createWelcomeMessage(): FlexMessage {
                         style: 'secondary',
                         height: 'sm',
                         margin: 'sm'
+                    },
+                    {
+                        type: 'button',
+                        action: {
+                            type: 'message',
+                            label: '🎓 完整功能介紹',
+                            text: '介紹'
+                        },
+                        style: 'link',
+                        height: 'sm',
+                        margin: 'sm'
                     }
                 ],
                 paddingAll: '15px',

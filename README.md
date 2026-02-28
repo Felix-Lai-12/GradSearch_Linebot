@@ -63,3 +63,4 @@
 ---
 
 **立即開啟你的升學新紀元：[GradSearch LINE Bot](https://lin.ee/kzoio6P)**
+**科系資料來源：[ReallyGood](https://reallygood.tw/graduate-school-application-guide/)**

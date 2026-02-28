@@ -141,6 +141,107 @@ async function handleTextMessage(
         });
     }
 
+    // Handle 介紹 (Introduction)
+    if (userText === '介紹' || userText === '/intro') {
+        return client.replyMessage(event.replyToken, {
+            type: 'flex',
+            altText: 'GradSearch 完整功能介紹',
+            contents: {
+                type: 'bubble',
+                size: 'mega',
+                header: {
+                    type: 'box',
+                    layout: 'vertical',
+                    contents: [
+                        {
+                            type: 'text',
+                            text: '🎯 GradSearch 使命',
+                            weight: 'bold',
+                            size: 'lg',
+                            color: '#1a1a2e'
+                        }
+                    ],
+                    paddingAll: '20px',
+                    backgroundColor: '#f0f4ff'
+                },
+                body: {
+                    type: 'box',
+                    layout: 'vertical',
+                    contents: [
+                        {
+                            type: 'text',
+                            text: '幫助準備研考的人，以更低成本、更快速的方式找到適合自己的研究所。',
+                            wrap: true,
+                            size: 'sm',
+                            color: '#333333'
+                        },
+                        {
+                            type: 'text',
+                            text: '「留學顧問產業常在賺取資訊差，但在 AI 時代，我們認為應該有更直接、透明的方式來解決這個問題。」',
+                            style: 'italic',
+                            margin: 'md',
+                            wrap: true,
+                            size: 'xs',
+                            color: '#666666'
+                        },
+                        {
+                            type: 'separator',
+                            margin: 'lg'
+                        },
+                        {
+                            type: 'text',
+                            text: '🛠️ 目前可以做到什麼？',
+                            weight: 'bold',
+                            size: 'sm',
+                            margin: 'lg'
+                        },
+                        {
+                            type: 'text',
+                            text: '• 強大搜尋：精確匹配全台研究所時程與簡章\n• AI 顧問：連貫對話建議，基於真實資料推薦\n• 智慧 RAG：消除 AI 幻覺，確保推薦系所真實存在',
+                            wrap: true,
+                            size: 'xs',
+                            color: '#555555',
+                            margin: 'sm'
+                        },
+                        {
+                            type: 'text',
+                            text: '🚀 未來將嘗試什麼？',
+                            weight: 'bold',
+                            size: 'sm',
+                            margin: 'lg'
+                        },
+                        {
+                            type: 'text',
+                            text: '• 收錄海外研究所資料\n• 增加學長姐申請心得與錄取數據\n• 留學生活費與學費之成本預估',
+                            wrap: true,
+                            size: 'xs',
+                            color: '#555555',
+                            margin: 'sm'
+                        }
+                    ],
+                    paddingAll: '20px'
+                },
+                footer: {
+                    type: 'box',
+                    layout: 'vertical',
+                    contents: [
+                        {
+                            type: 'button',
+                            action: {
+                                type: 'uri',
+                                label: '🔗 查看 GitHub 專案原始碼',
+                                uri: 'https://github.com/Felix-Lai-12/GradSearch_Linebot'
+                            },
+                            style: 'link',
+                            height: 'sm'
+                        }
+                    ],
+                    paddingAll: '15px'
+                }
+            }
+        });
+    }
+
     if (userText === '/search') {
         if (lineUserId) await setUserState(lineUserId, 'SEARCH');
         return client.replyMessage(event.replyToken, {

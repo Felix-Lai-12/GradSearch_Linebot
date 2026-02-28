@@ -6,7 +6,7 @@ set -e
 PROJECT_ID="ai-pro-plan"
 FUNCTION_NAME="gradsearch-linebot"
 REGION="asia-east1"
-NOTIFICATION_EMAIL="your-email@example.com"  # TODO: Update this
+NOTIFICATION_EMAIL="s10355186@gmail.com"
 
 echo "📊 Setting up GCP monitoring alerts..."
 

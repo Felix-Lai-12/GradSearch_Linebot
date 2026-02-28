@@ -117,16 +117,31 @@ export function createWelcomeMessage(): FlexMessage {
                 layout: 'vertical',
                 contents: [
                     {
-                        type: 'text',
-                        text: '🔍 試試看，輸入你想查的研究所吧！',
-                        size: 'sm',
+                        type: 'button',
+                        action: {
+                            type: 'message',
+                            label: '🔍 直接查詢特定系所',
+                            text: '/search'
+                        },
+                        style: 'primary',
                         color: '#1a73e8',
-                        align: 'center',
-                        weight: 'bold',
+                        height: 'sm',
+                        margin: 'sm'
                     },
+                    {
+                        type: 'button',
+                        action: {
+                            type: 'message',
+                            label: '💬 我還不確定想先聊聊',
+                            text: '/chat'
+                        },
+                        style: 'secondary',
+                        height: 'sm',
+                        margin: 'sm'
+                    }
                 ],
                 paddingAll: '15px',
-                backgroundColor: '#f0f4ff',
+                backgroundColor: '#ffffff',
             },
         },
     };

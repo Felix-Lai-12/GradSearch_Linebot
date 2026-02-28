@@ -47,8 +47,11 @@ export function createSearchResultMessage(result: SearchResult): FlexMessage {
     }
 
     // 放榜日期 (FR-3)
-    if (result.result_announce_date) {
-        infoRows.push(createInfoRow('📣 放榜日期', formatDate(result.result_announce_date)));
+    if (result.first_result_announce_date) {
+        infoRows.push(createInfoRow('📣 初試放榜', formatDate(result.first_result_announce_date)));
+    }
+    if (result.second_result_announce_date) {
+        infoRows.push(createInfoRow('🎊 複試放榜', formatDate(result.second_result_announce_date)));
     }
 
     if (result.application_fee) {
@@ -221,7 +224,7 @@ export function createSearchResultMessage(result: SearchResult): FlexMessage {
                     },
                     {
                         type: 'text',
-                        text: `${result.program_name} ${displayDegree}班`,
+                        text: `${result.admission_year || ''} 研究所推甄 ｜ ${result.program_name} ${displayDegree}班`,
                         size: 'sm',
                         color: '#555555',
                         margin: 'md',

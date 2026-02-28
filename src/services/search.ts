@@ -9,7 +9,8 @@ export interface SearchResult {
     admission_year: number | null;
     apply_start_date: string | null;
     apply_end_date: string | null;
-    result_announce_date: string | null;
+    first_result_announce_date: string | null;
+    second_result_announce_date: string | null;
     application_fee: number | null;
     interview_required: boolean | null;
     written_exam_required: boolean | null;
@@ -107,7 +108,8 @@ async function getProgramDetails(programId: string): Promise<SearchResult | null
         admission_year: application?.admission_year || null,
         apply_start_date: application?.apply_start_date || null,
         apply_end_date: application?.apply_end_date || null,
-        result_announce_date: application?.result_announce_date || null,
+        first_result_announce_date: application?.first_result_announce_date || null,
+        second_result_announce_date: application?.second_result_announce_date || null,
         application_fee: application?.application_fee || null,
         interview_required: application?.interview_required ?? null,
         written_exam_required: application?.written_exam_required ?? null,

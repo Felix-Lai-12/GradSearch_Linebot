@@ -11,12 +11,7 @@
 
 我們的使命是：**幫助準備考研的人，以更低成本、更快速的方式找到適合自己的研究所。**
 
-> [!WARNING]
-```markdown
-```markdown
 > **重要聲明**：本服務目前收錄之時程與招生數據為 **115 學年度** 之資訊，供未來申請者作為往年趨勢參考，並將於下屆招生開始時更新。實際申請請務必以各校當年度官方公告為準。
-```
-```
 
 ---
 
@@ -55,8 +50,9 @@
 ## 🤝 致謝與參考 (Credits)
 
 本專案在開發過程中深受開源社群啟發，特別感謝以下專案的技術奠基：
-- 核心搜尋邏輯與資料結構設計參考：[jschang19/dp_search_linebot_v2](https://github.com/jschang19/dp_search_linebot_v2) 
-
+- 核心搜尋邏輯與資料結構設計參考：[jschang19/dp_search_linebot_v2](https://github.com/jschang19/dp_search_linebot_v2)
+- 科系資料來源：[ReallyGood](https://reallygood.tw/graduate-school-application-guide/)
+- 立即加入好友體驗：[GradSearch LINE Bot](https://lin.ee/kzoio6P)**  
 ---
 
 ## 📄 授權
@@ -64,6 +60,3 @@
 [MIT License](LICENSE)
 
 ---
-
-**立即開啟你的升學新紀元：[GradSearch LINE Bot](https://lin.ee/kzoio6P)**  
-**科系資料來源：[ReallyGood](https://reallygood.tw/graduate-school-application-guide/)**

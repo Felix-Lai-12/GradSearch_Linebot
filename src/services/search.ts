@@ -164,3 +164,75 @@ export async function logSearch(
         console.error('Failed to log search:', err);
     }
 }
+/**
+ * Keywords-based search for RAG (Retrieval-Augmented Generation)
+ * Searches for schools or programs that match ANY of the keywords.
+ */
+export async function searchProgramsByKeywords(keywords: string[]): Promise<SearchResult[]> {
+    if (!keywords || keywords.length === 0) return [];
+
+    // Construct a query that matches any of the keywords in program name or school name
+    // Using simple ILIKE for each keyword across school name, program name, and department
+    const orConditions = keywords.flatMap(kw => [
+        `name.ilike.%${kw}%`,
+        `department.ilike.%${kw}%`,
+        `schools.name.ilike.%${kw}%`
+    ]).join(',');
+
+    const { data: programs, error } = await supabase
+        .from('programs')
+        .select('*, schools(name, city, qs_rank)')
+        .or(orConditions)
+        .limit(10);
+
+    if (error) {
+        console.error('Error in searchProgramsByKeywords:', error);
+        return [];
+    }
+
+    if (!programs) return [];
+
+    // For each program, get the latest application info to provide full context
+    const fullResults = await Promise.all(
+        programs.map(async (p: any) => {
+            const { data: application } = await supabase
+                .from('program_applications')
+                .select('*')
+                .eq('program_id', p.program_id)
+                .order('admission_year', { ascending: false })
+                .limit(1)
+                .single();
+
+            return {
+                program_id: p.program_id,
+                school_name: p.schools?.name || '',
+                program_name: p.name,
+                degree: p.degree,
+                department: p.department,
+                admission_type: application?.admission_type || null,
+                admission_year: application?.admission_year || null,
+                apply_start_date: application?.apply_start_date || null,
+                apply_end_date: application?.apply_end_date || null,
+                application_fee: application?.application_fee || null,
+                interview_required: application?.interview_required || null,
+                written_exam_required: application?.written_exam_required || null,
+                portfolio_required: application?.portfolio_required || null,
+                required_documents: application?.required_documents || {},
+                cohort_size: p.cohort_size,
+                program_overview: p.program_overview,
+                curriculum_url: p.curriculum_url,
+                website: p.website,
+                research_areas: p.research_areas,
+                faculty_url: p.faculty_url,
+                labs_url: p.labs_url,
+                data_status: application?.data_status || 'unknown',
+                verified_at: application?.verified_at || null,
+                source_url: application?.source_url || null,
+                first_result_announce_date: null,
+                second_result_announce_date: null
+            } as SearchResult;
+        })
+    );
+
+    return fullResults;
+}

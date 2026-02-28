@@ -15,31 +15,31 @@ const schoolSchedules = [
         apply_end_date: '114/10/09',
         interview_dates: '114/11',
         first_result_announce_date: '114/11/20',
-        brochure_url: 'https://exam.aca.ntu.edu.tw/graf/brochure/'
+        brochure_url: 'https://exam.aca.ntu.edu.tw/graf/brochure/detail.asp'
     },
     {
         school_name: '國立清華大學',
-        apply_start_date: '114/10/01',
-        apply_end_date: '114/10/08',
+        apply_start_date: '114/10/08',
+        apply_end_date: '114/10/14',
         interview_dates: '114/11',
         first_result_announce_date: '114/11/15',
-        brochure_url: 'https://admissions.nthu.edu.tw/'
+        brochure_url: 'https://admissions.nthu.edu.tw/p/406-1032-273523,r1155.php'
     },
     {
         school_name: '國立陽明交通大學',
-        apply_start_date: '114/09/30',
+        apply_start_date: '114/10/01',
         apply_end_date: '114/10/07',
         interview_dates: '114/11',
         first_result_announce_date: '114/11/18',
-        brochure_url: 'https://exam.nycu.edu.tw/'
+        brochure_url: 'https://exam.nycu.edu.tw/115md/'
     },
     {
         school_name: '國立成功大學',
-        apply_start_date: '114/09/26',
-        apply_end_date: '114/10/06',
+        apply_start_date: '114/09/24',
+        apply_end_date: '114/10/02',
         interview_dates: '114/11',
         first_result_announce_date: '114/11/21',
-        brochure_url: 'https://adms-acad.ncku.edu.tw/'
+        brochure_url: 'https://adms-acad.ncku.edu.tw/p/406-1044-271512,r3544.php'
     },
     {
         school_name: '國立政治大學',
@@ -47,7 +47,7 @@ const schoolSchedules = [
         apply_end_date: '114/10/08',
         interview_dates: '114/11',
         first_result_announce_date: '114/11/25',
-        brochure_url: 'https://www.nccu.edu.tw/'
+        brochure_url: 'https://www.nccu.edu.tw/p/406-1000-17684,r123.php'
     },
     {
         school_name: '私立東吳大學',

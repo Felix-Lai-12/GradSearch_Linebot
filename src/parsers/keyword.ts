@@ -34,10 +34,9 @@ export async function parseKeyword(text: string): Promise<ParsedQuery> {
 
     if (schoolAliases && schoolAliases.length > 0) {
         // Find all candidates and store their position
-        // DEMO: Temporarily disabled case-insensitive matching to showcase auto-healing
-        // const textLower = text.toLowerCase();
+        const textLower = text.toLowerCase();
         const candidates = schoolAliases
-            .map(sa => ({ ...sa, pos: text.indexOf(sa.alias) })) // Changed: removed toLowerCase()
+            .map(sa => ({ ...sa, pos: textLower.indexOf(sa.alias.toLowerCase()) }))
             .filter(sa => sa.pos !== -1)
             // Sort by: 1. Position (smaller is better), 2. Length (longer is better)
             .sort((a, b) => {
@@ -98,14 +97,10 @@ export async function parseKeyword(text: string): Promise<ParsedQuery> {
             .replace(/[所班碩博系]$/, '')
             .trim();
 
-        // DEMO: Temporarily disabled case-insensitive matching to showcase auto-healing
-        // const searchTexts = [result.remainingText.toLowerCase(), cleanedRemaining.toLowerCase()].filter(t => t.length > 0);
-        const searchTexts = [result.remainingText, cleanedRemaining].filter(t => t.length > 0);
+        const searchTexts = [result.remainingText.toLowerCase(), cleanedRemaining.toLowerCase()].filter(t => t.length > 0);
 
         for (const sa of sortedPrograms) {
-            // DEMO: Temporarily disabled case-insensitive matching to showcase auto-healing
-            // const aliasLower = sa.alias.toLowerCase();
-            const aliasLower = sa.alias; // Changed: removed toLowerCase()
+            const aliasLower = sa.alias.toLowerCase();
             for (const searchText of searchTexts) {
                 // If the remaining text includes the program alias OR the program alias exact matches the search text
                 if (searchText.includes(aliasLower) || aliasLower === searchText) {

@@ -113,7 +113,7 @@ export function createWelcomeMessage(): FlexMessage {
                     },
                     {
                         type: 'text',
-                        text: '「台大國企所」／「清大資工所」／「成大電機所」',
+                        text: '「台大國企所」／「清大資工所」',
                         size: 'xs',
                         color: '#1a73e8',
                         margin: 'sm',

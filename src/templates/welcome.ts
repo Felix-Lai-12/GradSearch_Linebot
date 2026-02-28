@@ -98,20 +98,6 @@ export function createWelcomeMessage(): FlexMessage {
                         margin: 'sm',
                     },
                     {
-                        type: 'text',
-                        text: '快速試試：',
-                        weight: 'bold',
-                        size: 'sm',
-                        margin: 'lg',
-                    },
-                    {
-                        type: 'text',
-                        text: '「台大國企所」／「清大資工所」',
-                        size: 'xs',
-                        color: '#1a73e8',
-                        margin: 'sm',
-                    },
-                    {
                         type: 'separator',
                         margin: 'lg',
                     },

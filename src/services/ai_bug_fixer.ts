@@ -25,7 +25,13 @@ const SYSTEM_PROMPT = `
 
 你可以處理兩種問題：
 1. URL_UPDATE: 使用者指出某個系所的官網網址或簡章連結是錯的，並提供了覺得是正確的網址。
-2. ALIAS_ADD: 使用者指出某個簡寫或俗稱（例如"交大資工"、"台大中文"）無法搜尋或配對不到。這時候我們需要取得這個縮寫對應的正式學校名稱和系所名稱。
+2. ALIAS_ADD: 使用者指出某個簡寫或俗稱（例如"交大資工"、"台大中文"）無法搜尋或配對不到。
+
+**重要：對於 ALIAS_ADD 類型**
+- new_alias 應該只包含「系所」的簡稱部分，不要包含學校簡稱
+- 例如：用戶說「Ntu中文找不到」→ new_alias 應該是「中文」，而不是「Ntu中文」
+- 例如：用戶說「台大資工找不到」→ new_alias 應該是「資工」，而不是「台大資工」
+- 學校簡稱（如 Ntu、台大）通常已經存在，不需要重複新增
 
 如果有明確資訊，請設定 is_fixable 為 true，並擷取必要的欄位。若資訊不足判斷，is_fixable 為 false。
 `;
@@ -38,7 +44,7 @@ const responseSchema: Schema = {
         target_school: { type: Type.STRING, description: '推測的正式學校名稱，例如：國立臺灣大學' },
         target_program: { type: Type.STRING, description: '推測的正式系所名稱，例如：中國文學系。如果沒有則留空。' },
         new_url: { type: Type.STRING, description: '如果 fix_type 包含 URL，這裡放提取出的正確網址' },
-        new_alias: { type: Type.STRING, description: '如果 fix_type 包含 ALIAS，這裡放遇到問題的縮寫詞，例如：台大中文' }
+        new_alias: { type: Type.STRING, description: '如果 fix_type 包含 ALIAS，這裡放系所的簡稱（不含學校名），例如：中文、資工、電機' }
     },
     required: ['is_fixable', 'fix_type']
 };

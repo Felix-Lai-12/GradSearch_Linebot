@@ -73,7 +73,7 @@ export async function searchProgram(query: string): Promise<SearchResponse> {
     // Case 4: Nothing found
     return {
         type: 'not_found',
-        message: `找不到「${query}」相關的研究所 😢\n\n請試試其他關鍵字，例如：台大國企所、清大資工`,
+        message: `找不到「${query}」相關的研究所 😢\n\n請試試其他關鍵字，例如：台大國企所、清大資工。\n\n 搜尋模式不支援對話功能`,
         parsed,
     };
 }

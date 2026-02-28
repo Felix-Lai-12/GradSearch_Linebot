@@ -46,7 +46,7 @@ const responseSchema: Schema = {
 export async function processBugReport(userText: string): Promise<BugFixResult> {
     try {
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash', // Fallback to 2.5-flash since 3.0 API name is not supported yet
+            model: 'gemini-2.5-pro', // Using gemini-2.5-pro which is the latest highest reasoning model available in the API list
             contents: userText,
             config: {
                 systemInstruction: SYSTEM_PROMPT,

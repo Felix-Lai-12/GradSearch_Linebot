@@ -10,7 +10,7 @@ https://console.cloud.google.com/monitoring/alerting?project=ai-pro-plan
 ### 2. 建立通知頻道
 1. 點選左側 "Notification channels"
 2. 點選 "Add new" → Email
-3. 輸入: s10355186@gmail.com
+3. 輸入你的 email
 4. 儲存並確認 email
 
 ### 3. 建立告警政策

@@ -34,8 +34,9 @@ export async function parseKeyword(text: string): Promise<ParsedQuery> {
 
     if (schoolAliases && schoolAliases.length > 0) {
         // Find all candidates and store their position
+        const textLower = text.toLowerCase();
         const candidates = schoolAliases
-            .map(sa => ({ ...sa, pos: text.indexOf(sa.alias) }))
+            .map(sa => ({ ...sa, pos: textLower.indexOf(sa.alias.toLowerCase()) }))
             .filter(sa => sa.pos !== -1)
             // Sort by: 1. Position (smaller is better), 2. Length (longer is better)
             .sort((a, b) => {
@@ -49,7 +50,7 @@ export async function parseKeyword(text: string): Promise<ParsedQuery> {
             // @ts-ignore
             result.schoolName = sa.schools?.name || sa.alias;
             // Remove the matched school alias from the text
-            result.remainingText = text.replace(sa.alias, '').trim();
+            result.remainingText = text.replace(new RegExp(sa.alias, 'i'), '').trim();
         }
     }
 
@@ -91,12 +92,13 @@ export async function parseKeyword(text: string): Promise<ParsedQuery> {
             .replace(/[所班碩博系]$/, '')
             .trim();
 
-        const searchTexts = [result.remainingText, cleanedRemaining].filter(t => t.length > 0);
+        const searchTexts = [result.remainingText.toLowerCase(), cleanedRemaining.toLowerCase()].filter(t => t.length > 0);
 
         for (const sa of sortedPrograms) {
+            const aliasLower = sa.alias.toLowerCase();
             for (const searchText of searchTexts) {
                 // If the remaining text includes the program alias OR the program alias exact matches the search text
-                if (searchText.includes(sa.alias) || sa.alias === searchText) {
+                if (searchText.includes(aliasLower) || aliasLower === searchText) {
                     const programData = sa.programs as any;
                     result.programId = sa.program_id;
                     result.programName = programData?.name || sa.alias;
@@ -107,7 +109,7 @@ export async function parseKeyword(text: string): Promise<ParsedQuery> {
                     }
 
                     // Remove matched alias from remaining text
-                    result.remainingText = result.remainingText.replace(sa.alias, '').trim();
+                    result.remainingText = result.remainingText.replace(new RegExp(sa.alias, 'i'), '').trim();
                     break;
                 }
             }

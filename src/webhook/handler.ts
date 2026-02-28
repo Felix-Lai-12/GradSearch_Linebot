@@ -131,23 +131,54 @@ async function handleTextMessage(
                 });
             }
 
-            // Send a loading indication (optional, maybe not possible immediately without reply token reuse)
-            // But we will directly attempt the API call. Line allows up to 30s response.
-            const recommendations = await getRecommendations(lineUserId, userText);
+            // Send a loading indication
+            try {
+                // To avoid version issues with the SDK, use raw fetch for the Chat Loading API
+                if (process.env.LINE_CHANNEL_ACCESS_TOKEN) {
+                    fetch('https://api.line.me/v2/bot/chat/loading/start', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${process.env.LINE_CHANNEL_ACCESS_TOKEN}`
+                        },
+                        body: JSON.stringify({ chatId: lineUserId, loadingSeconds: 15 })
+                    }).catch(err => console.error('Failed to send loading animation:', err));
+                }
+            } catch (err) {
+                console.error('Error starting loading animation', err);
+            }
 
-            if (!recommendations || recommendations.length === 0) {
+            const aiResponse = await getRecommendations(lineUserId, userText);
+
+            if (!aiResponse) {
                 return client.replyMessage(event.replyToken, {
                     type: 'text',
-                    text: '😢 抱歉，我目前無法為你找到合適的推薦，請換個方式描述看看。'
+                    text: '😢 抱歉，我目前無法為你找到合適的回覆，請換個方式描述看看。'
                 });
             }
 
-            // Get Updated Quota
+            // Get Updated Quota (only consumed if returned correctly in getRecommendations)
             const newUsage = await getUserQuotaStatus(lineUserId);
             const usageString = newUsage.max === -1 ? `目前已使用：${newUsage.count} 次 (無上限)` : `目前已使用：${newUsage.count} / ${newUsage.max} 次`;
 
-            const aiMessage = createAiRecommendationMessage(recommendations, usageString);
-            return client.replyMessage(event.replyToken, aiMessage);
+            if (aiResponse.response_type === 'chat') {
+                return client.replyMessage(event.replyToken, {
+                    type: 'text',
+                    text: aiResponse.reply_message
+                });
+            } else if (aiResponse.response_type === 'recommendation' && aiResponse.recommendations) {
+                const aiMessage = createAiRecommendationMessage(aiResponse.recommendations, usageString);
+                // Send both text reply and flex message
+                return client.replyMessage(event.replyToken, [
+                    { type: 'text', text: aiResponse.reply_message },
+                    aiMessage
+                ]);
+            } else {
+                return client.replyMessage(event.replyToken, {
+                    type: 'text',
+                    text: '😢 抱歉，我不確定怎麼回覆，請再試一次。'
+                });
+            }
 
         } catch (e: any) {
             if (e.message === 'QUOTA_EXCEEDED') {

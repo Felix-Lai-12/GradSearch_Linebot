@@ -103,7 +103,7 @@ export function createWelcomeMessage(): FlexMessage {
                     },
                     {
                         type: 'text',
-                        text: '輸入「收藏」查看已收藏的研究所\n輸入「幫助」查看使用說明',
+                        text: '輸入「幫助」查看使用說明',
                         size: 'xs',
                         color: '#999999',
                         margin: 'lg',

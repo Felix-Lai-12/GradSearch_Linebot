@@ -13,7 +13,9 @@ export async function createGitHubIssue(
         ? `[用戶回報] ${content.substring(0, 50)}`
         : `[用戶許願] ${content.substring(0, 50)}`;
 
-    const body = `**用戶 ID**: \`${userId}\`\n**類型**: ${type === 'bug' ? 'Bug 回報' : '功能許願'}\n\n**內容**:\n${content}`;
+    // Hash user ID for privacy - only show last 6 chars
+    const maskedUserId = userId ? `***${userId.slice(-6)}` : 'anonymous';
+    const body = `**用戶 ID**: \`${maskedUserId}\`\n**類型**: ${type === 'bug' ? 'Bug 回報' : '功能許願'}\n\n**內容**:\n${content}`;
 
     const labels = type === 'bug' ? ['bug', 'user-report'] : ['enhancement', 'user-request'];
 

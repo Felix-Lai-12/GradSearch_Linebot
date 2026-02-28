@@ -153,7 +153,7 @@ export function createWelcomeMessage(): FlexMessage {
                         type: 'button',
                         action: {
                             type: 'message',
-                            label: '🧭 想先聊聊再推薦',
+                            label: '🧭 跟 AI聊聊再推薦',
                             text: '/chat'
                         },
                         style: 'secondary',

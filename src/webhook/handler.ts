@@ -53,7 +53,7 @@ async function handleFollow(
     const lineUserId = event.source.userId;
     const replyToken = event.replyToken;
 
-    console.log(`[Follow] New follower detected: ${lineUserId}`);
+    console.log(`[Follow] New follower detected: ***${lineUserId?.slice(-6) || 'unknown'}`);
 
     if (!lineUserId) {
         console.warn('[Follow] Missing userId in follow event');
@@ -72,14 +72,14 @@ async function handleFollow(
         if (error) {
             console.error('[Follow] Failed to upsert user to Supabase:', error);
         } else {
-            console.log(`[Follow] User ${lineUserId} upserted successfully`);
+            console.log(`[Follow] User ***${lineUserId.slice(-6)} upserted successfully`);
         }
     } catch (e) {
         console.error('[Follow] Unexpected error during upsert:', e);
     }
 
     // Send welcome message
-    console.log(`[Follow] Sending welcome message to ${lineUserId}`);
+    console.log(`[Follow] Sending welcome message to ***${lineUserId.slice(-6)}`);
     try {
         const welcomeMessage = createWelcomeMessage();
         return await client.replyMessage(replyToken, welcomeMessage);

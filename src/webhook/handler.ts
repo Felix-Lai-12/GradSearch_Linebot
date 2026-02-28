@@ -90,12 +90,12 @@ async function handleTextMessage(
     }
 
     // Handle 許願 (feature request)
-    if (userText.startsWith('許願 ')) {
-        const wish = userText.replace('許願 ', '').trim();
+    if (userText.startsWith('/wish')) {
+        const wish = userText.replace('/wish', '').trim();
         if (!wish) {
             return client.replyMessage(event.replyToken, {
                 type: 'text',
-                text: '請在「許願」後面加上你的建議內容喔！\n例如：許願 我想要查詢考古題'
+                text: '請在 /wish 後面加上你的建議內容喔！\n例如：/wish 我想要查詢考古題'
             });
         }
         const success = await createGitHubIssue('feature', wish, lineUserId || 'anonymous');
@@ -108,12 +108,12 @@ async function handleTextMessage(
     }
 
     // Handle 回報 (bug report)
-    if (userText.startsWith('回報 ')) {
-        const bug = userText.replace('回報 ', '').trim();
+    if (userText.startsWith('/bug')) {
+        const bug = userText.replace('/bug', '').trim();
         if (!bug) {
             return client.replyMessage(event.replyToken, {
                 type: 'text',
-                text: '請在「回報」後面加上問題描述喔！\n例如：回報 搜尋台大資工沒有反應'
+                text: '請在 /bug 後面加上問題描述喔！\n例如：/bug 搜尋台大資工沒有反應'
             });
         }
         const success = await createGitHubIssue('bug', bug, lineUserId || 'anonymous');

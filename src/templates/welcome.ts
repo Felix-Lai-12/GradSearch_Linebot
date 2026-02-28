@@ -103,14 +103,7 @@ export function createWelcomeMessage(): FlexMessage {
                     },
                     {
                         type: 'text',
-                        text: '📝 其他功能',
-                        weight: 'bold',
-                        size: 'sm',
-                        margin: 'lg',
-                    },
-                    {
-                        type: 'text',
-                        text: '• 輸入「幫助」查看使用說明\n• 輸入「許願 [內容]」提出功能建議\n• 輸入「回報 [內容]」回報問題',
+                        text: '輸入 /search 可以直接查詢特定系所\n輸入 /chat 啟動專業升學顧問諮詢\n輸入 /wish 告訴我們你還希望增加什麼功能\n輸入 /bug 回報資訊錯誤、連結無法正常開啟',
                         size: 'xs',
                         color: '#666666',
                         margin: 'sm',

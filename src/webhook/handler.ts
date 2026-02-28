@@ -101,14 +101,14 @@ async function handleTextMessage(
 
     // --- 🔹 1. 導覽與幫助指令 (Navigation & Help) ---
 
-    // [幫助/說明]: 傳送歡迎操作指南
-    if (userText === '幫助' || userText === '說明' || userText === 'help') {
+    // [幫助/說明]: 傳送歡迎操作指南 (原本的 Welcome Flex)
+    if (userText === '幫助' || userText === '說明' || userText === 'help' || userText === '/help') {
         const welcomeMessage = createWelcomeMessage();
         return client.replyMessage(event.replyToken, welcomeMessage);
     }
 
     // [介紹/使命]: 傳送 GradSearch 使命與功能介紹
-    if (userText === '介紹' || userText === '/intro' || userText === '/help') {
+    if (userText === '介紹' || userText === '/intro') {
         return client.replyMessage(event.replyToken, {
             type: 'flex',
             altText: 'GradSearch 完整功能介紹',
@@ -136,7 +136,7 @@ async function handleTextMessage(
                     contents: [
                         {
                             type: 'text',
-                            text: '幫助準備研考的人，以更低成本、更快速的方式找到適合自己的研究所。',
+                            text: '幫助準備考研的人，以更低成本、更快速的方式找到適合自己的研究所。',
                             wrap: true,
                             size: 'sm',
                             color: '#333333'
@@ -156,14 +156,14 @@ async function handleTextMessage(
                         },
                         {
                             type: 'text',
-                            text: '🛠️ 目前可以做到什麼？',
+                            text: '🛠️ 目前可以做到什麼 (Beta 版)',
                             weight: 'bold',
                             size: 'sm',
                             margin: 'lg'
                         },
                         {
                             type: 'text',
-                            text: '• 強大搜尋：精確匹配全台研究所時程與簡章\n• AI 顧問：連貫對話建議，基於真實資料推薦\n• 智慧 RAG：消除 AI 幻覺，確保推薦系所真實存在',
+                            text: '• 全台研究所申請時程、簡章一鍵取得\n• AI 檢索真實資料庫提供升學建議',
                             wrap: true,
                             size: 'xs',
                             color: '#555555',
@@ -171,14 +171,14 @@ async function handleTextMessage(
                         },
                         {
                             type: 'text',
-                            text: '🚀 未來將嘗試什麼？',
+                            text: '🚀 未來將嘗試什麼',
                             weight: 'bold',
                             size: 'sm',
                             margin: 'lg'
                         },
                         {
                             type: 'text',
-                            text: '• 收錄海外研究所資料\n• 增加學長姐申請心得與錄取數據\n• 留學生活費與學費之成本預估',
+                            text: '• 收錄海外研究所資料\n• 增加學長姐申請心得與錄取數據\n• 留學生活費與學費之成本預估\n• 輸入 /wish 來許願',
                             wrap: true,
                             size: 'xs',
                             color: '#555555',

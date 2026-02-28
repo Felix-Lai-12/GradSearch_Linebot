@@ -46,4 +46,5 @@ jobs:
             LINE_CHANNEL_SECRET=${{ secrets.LINE_CHANNEL_SECRET }}
             SUPABASE_URL=${{ secrets.SUPABASE_URL }}
             SUPABASE_SERVICE_KEY=${{ secrets.SUPABASE_SERVICE_KEY }}
+            GH_ISSUES_TOKEN=${{ secrets.GH_ISSUES_TOKEN }}
             GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}

@@ -16,6 +16,7 @@ import { toggleFavorite, getFavorites } from '../services/favorite';
 import { getUserState, setUserState } from '../services/user_state';
 import { getRecommendations } from '../services/ai_recommendation';
 import { getUserQuotaStatus } from '../services/quota';
+import { createGitHubIssue } from '../services/github';
 import { supabase } from '../db/supabase';
 import { URLSearchParams } from 'url';
 
@@ -88,6 +89,42 @@ async function handleTextMessage(
         return client.replyMessage(event.replyToken, welcomeMessage);
     }
 
+    // Handle 許願 (feature request)
+    if (userText.startsWith('許願 ')) {
+        const wish = userText.replace('許願 ', '').trim();
+        if (!wish) {
+            return client.replyMessage(event.replyToken, {
+                type: 'text',
+                text: '請在「許願」後面加上你的建議內容喔！\n例如：許願 我想要查詢考古題'
+            });
+        }
+        const success = await createGitHubIssue('feature', wish, lineUserId || 'anonymous');
+        return client.replyMessage(event.replyToken, {
+            type: 'text',
+            text: success
+                ? '✅ 已收到你的許願！我們會盡快審核並考慮加入此功能。'
+                : '❌ 許願提交失敗，請稍後再試。'
+        });
+    }
+
+    // Handle 回報 (bug report)
+    if (userText.startsWith('回報 ')) {
+        const bug = userText.replace('回報 ', '').trim();
+        if (!bug) {
+            return client.replyMessage(event.replyToken, {
+                type: 'text',
+                text: '請在「回報」後面加上問題描述喔！\n例如：回報 搜尋台大資工沒有反應'
+            });
+        }
+        const success = await createGitHubIssue('bug', bug, lineUserId || 'anonymous');
+        return client.replyMessage(event.replyToken, {
+            type: 'text',
+            text: success
+                ? '✅ 已收到你的回報！我們會盡快處理此問題。'
+                : '❌ 回報提交失敗，請稍後再試。'
+        });
+    }
+
     if (userText === '/search') {
         if (lineUserId) await setUserState(lineUserId, 'SEARCH');
         return client.replyMessage(event.replyToken, {
@@ -101,6 +138,20 @@ async function handleTextMessage(
         return client.replyMessage(event.replyToken, {
             type: 'text',
             text: '💡 你好！我是你的專屬升學顧問。\n你可以告訴我你的背景、興趣或任何選校的問題，我會為你推薦 3 個合適的系所。\n例如：「我是私立資管系，想要考好找工作的國立大學所」'
+        });
+    }
+
+    if (userText.startsWith('/wish')) {
+        return client.replyMessage(event.replyToken, {
+            type: 'text',
+            text: '✨ 謝謝您的建議！我們已經收到您的許願，開發團隊會盡快評估是否加入此功能喔！'
+        });
+    }
+
+    if (userText.startsWith('/bug')) {
+        return client.replyMessage(event.replyToken, {
+            type: 'text',
+            text: '🐛 感謝您的回報！我們已經記錄下這個問題，會盡快進行修正以提供更好的服務。'
         });
     }
 

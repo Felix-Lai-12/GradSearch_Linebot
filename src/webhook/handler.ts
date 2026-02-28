@@ -25,6 +25,7 @@ export async function handleEvent(
     event: WebhookEvent
 ): Promise<MessageAPIResponseBase | null> {
     // Handle Follow event (new friend added)
+    console.log(`[Webhook] Received event type: ${event.type}`);
     if (event.type === 'follow') {
         return handleFollow(client, event);
     }
@@ -50,27 +51,42 @@ async function handleFollow(
     event: FollowEvent
 ): Promise<MessageAPIResponseBase | null> {
     const lineUserId = event.source.userId;
+    const replyToken = event.replyToken;
+
+    console.log(`[Follow] New follower detected: ${lineUserId}`);
 
     if (!lineUserId) {
-        console.warn('Follow event without userId');
+        console.warn('[Follow] Missing userId in follow event');
         return null;
     }
 
-    // Upsert user in database
-    const { error } = await supabase
-        .from('users')
-        .upsert(
-            { line_user_id: lineUserId },
-            { onConflict: 'line_user_id' }
-        );
+    // Attempt to upsert user, but don't let it block the welcome message
+    try {
+        const { error } = await supabase
+            .from('users')
+            .upsert(
+                { line_user_id: lineUserId },
+                { onConflict: 'line_user_id' }
+            );
 
-    if (error) {
-        console.error('Failed to upsert user:', error);
+        if (error) {
+            console.error('[Follow] Failed to upsert user to Supabase:', error);
+        } else {
+            console.log(`[Follow] User ${lineUserId} upserted successfully`);
+        }
+    } catch (e) {
+        console.error('[Follow] Unexpected error during upsert:', e);
     }
 
     // Send welcome message
-    const welcomeMessage = createWelcomeMessage();
-    return client.replyMessage(event.replyToken, welcomeMessage);
+    console.log(`[Follow] Sending welcome message to ${lineUserId}`);
+    try {
+        const welcomeMessage = createWelcomeMessage();
+        return await client.replyMessage(replyToken, welcomeMessage);
+    } catch (err) {
+        console.error('[Follow] Failed to send welcome message:', err);
+        return null;
+    }
 }
 
 /**

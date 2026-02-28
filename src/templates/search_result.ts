@@ -126,20 +126,20 @@ export function createSearchResultMessage(result: SearchResult): FlexMessage {
     // Footer buttons
     const footerContents: any[] = [];
 
-    // ⭐️ 收藏按鈕 (Always present)
-    footerContents.push({
-        type: 'button',
-        action: {
-            type: 'postback',
-            label: '⭐️ 收藏此系所',
-            data: `action=favorite&program_id=${result.program_id}`,
-            displayText: '⭐ 已收藏！',
-        },
-        style: 'primary',
-        color: '#1a73e8',
-        height: 'sm',
-        margin: 'sm',
-    });
+    // ⭐️ 收藏按鈕 (隱藏，但保留後端功能)
+    // footerContents.push({
+    //     type: 'button',
+    //     action: {
+    //         type: 'postback',
+    //         label: '⭐️ 收藏此系所',
+    //         data: `action=favorite&program_id=${result.program_id}`,
+    //         displayText: '⭐ 已收藏！',
+    //     },
+    //     style: 'primary',
+    //     color: '#1a73e8',
+    //     height: 'sm',
+    //     margin: 'sm',
+    // });
 
     // 🔗 Source URL button (如果有簡章)
     if (result.source_url) {

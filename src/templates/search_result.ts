@@ -159,12 +159,14 @@ export function createSearchResultMessage(result: SearchResult): FlexMessage {
     // 📚 課程資訊 / 系所網站 (優先使用 curriculum_url，沒有則 fallback 到 website)
     const curriculumLink = result.curriculum_url || result.website;
     if (curriculumLink) {
+        // 清理 URI：移除特殊字元、換行、多餘空白
+        const cleanUri = curriculumLink.trim().replace(/[\s\n\r"\\]+/g, '');
         footerContents.push({
             type: 'button',
             action: {
                 type: 'uri',
                 label: '📚 課程與系所資訊',
-                uri: curriculumLink,
+                uri: cleanUri,
             },
             style: 'secondary',
             height: 'sm',

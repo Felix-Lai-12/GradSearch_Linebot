@@ -103,7 +103,7 @@ export function createWelcomeMessage(): FlexMessage {
                     },
                     {
                         type: 'text',
-                        text: '其他指令：/bug 回報問題，/wish 功能許願\n*本服務由 AI 生成與整理資訊，請以各校官方公告為準。',
+                        text: '其他指令：/bug 回報問題，/wish 功能許願\n\n*本服務由 AI 生成與整理資訊，請以各校官方公告為準。',
                         size: 'xs',
                         color: '#999999',
                         margin: 'md',

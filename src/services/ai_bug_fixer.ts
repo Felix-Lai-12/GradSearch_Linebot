@@ -8,6 +8,57 @@ const supabaseUrl = process.env.SUPABASE_URL!;
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Security: Validate URL format and check for malicious patterns
+function isValidAndSafeUrl(url: string): boolean {
+    try {
+        const parsed = new URL(url);
+        
+        // Only allow http/https
+        if (!['http:', 'https:'].includes(parsed.protocol)) {
+            return false;
+        }
+
+        // Block suspicious TLDs and patterns
+        const suspiciousTlds = ['.xxx', '.adult', '.porn', '.sex'];
+        const suspiciousKeywords = ['porn', 'xxx', 'adult', 'sex', 'casino', 'gambling'];
+        
+        const hostname = parsed.hostname.toLowerCase();
+        const fullUrl = url.toLowerCase();
+
+        // Check TLD
+        if (suspiciousTlds.some(tld => hostname.endsWith(tld))) {
+            return false;
+        }
+
+        // Check keywords
+        if (suspiciousKeywords.some(keyword => fullUrl.includes(keyword))) {
+            return false;
+        }
+
+        // Must be .edu.tw or .edu or common academic domains
+        const allowedPatterns = [
+            /\.edu\.tw$/,
+            /\.edu$/,
+            /\.gov\.tw$/,
+            /\.ac\./,
+            // Allow common university domains
+            /ntu\.edu/,
+            /ncku\.edu/,
+            /nthu\.edu/,
+            /nctu\.edu/,
+            /nycu\.edu/,
+        ];
+
+        const isAcademic = allowedPatterns.some(pattern => pattern.test(hostname));
+        
+        // For now, only auto-approve academic domains
+        // Others will need manual review
+        return isAcademic;
+    } catch {
+        return false;
+    }
+}
+
 export interface BugFixResult {
     is_fixable: boolean;
     fix_type: 'URL_UPDATE' | 'ALIAS_ADD' | 'UNKNOWN';
@@ -98,6 +149,11 @@ async function executeAutoFix(parsed: BugFixResult): Promise<BugFixResult> {
             return { ...parsed, success: false, message: '修復網址必須要明確指名系所' };
         }
 
+        // Security: Validate URL format and domain
+        if (!isValidAndSafeUrl(parsed.new_url)) {
+            return { ...parsed, success: false, message: '網址格式不正確或不是學術網域，已轉交人工審核' };
+        }
+
         const { data: programs } = await supabase.from('programs')
             .select('program_id')
             .eq('school_id', schoolId)
@@ -109,9 +165,7 @@ async function executeAutoFix(parsed: BugFixResult): Promise<BugFixResult> {
         }
         const programId = programs[0].program_id;
 
-        // 簡單判斷要更新 programs.website 還是 program_applications.source_url
-        // 這邊預設更新 website，如果有 "簡章" "報名" 關鍵字可透過後續優化更新 source_url
-        // 為了安全先更新 programs.website (因這比較常是系網)
+        // Only update if URL passes security check
         const { error } = await supabase.from('programs')
             .update({ website: parsed.new_url })
             .eq('program_id', programId);

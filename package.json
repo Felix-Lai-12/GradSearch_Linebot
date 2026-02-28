@@ -1,0 +1,33 @@
+{
+  "name": "gradsearch-linebot",
+  "version": "1.0.0",
+  "description": "台灣研究所查詢 LINE Bot MVP",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "nodemon --exec ts-node src/index.ts",
+    "start": "node dist/index.js",
+    "migrate": "ts-node scripts/run_migration.ts",
+    "deploy": "bash deploy.sh"
+  },
+  "dependencies": {
+    "@line/bot-sdk": "^9.6.0",
+    "@mendable/firecrawl-js": "^4.15.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "@types/pg": "^8.16.0",
+    "csv-parse": "^6.1.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "pg": "^8.19.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.14.0",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.0"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}

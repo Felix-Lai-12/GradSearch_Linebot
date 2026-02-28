@@ -124,7 +124,7 @@ export function createWelcomeMessage(): FlexMessage {
                     },
                     {
                         type: 'text',
-                        text: '*本服務由 AI 生成與整理資訊，請以各校官方公告為準。',
+                        text: '/bug 回報問題，/wish 功能許願\n*本服務由 AI 生成與整理資訊，請以各校官方公告為準。',
                         size: 'xxs',
                         color: '#999999',
                         margin: 'md',

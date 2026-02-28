@@ -8,7 +8,8 @@
     "dev": "nodemon --exec ts-node src/index.ts",
     "start": "node dist/index.js",
     "migrate": "ts-node scripts/run_migration.ts",
-    "deploy": "bash deploy.sh"
+    "deploy": "bash deploy.sh",
+    "richmenu": "ts-node scripts/setup_richmenu.ts"
   },
   "dependencies": {
     "@google/genai": "^1.43.0",

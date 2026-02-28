@@ -67,6 +67,11 @@ export async function parseKeyword(text: string): Promise<ParsedQuery> {
 
     const { data: programAliases } = await query;
 
+    console.log(`[DEBUG] Found ${programAliases?.length || 0} program aliases for text: "${text}"`);
+    if (programAliases && programAliases.length > 0) {
+        console.log(`[DEBUG] Sample aliases:`, programAliases.slice(0, 5).map(pa => pa.alias));
+    }
+
     if (programAliases && programAliases.length > 0) {
         // Sort program aliases by:
         // 1. Max length of alias (longer match is better)
@@ -104,6 +109,7 @@ export async function parseKeyword(text: string): Promise<ParsedQuery> {
             for (const searchText of searchTexts) {
                 // If the remaining text includes the program alias OR the program alias exact matches the search text
                 if (searchText.includes(aliasLower) || aliasLower === searchText) {
+                    console.log(`[DEBUG] Matched! searchText="${searchText}", alias="${aliasLower}"`);
                     const programData = sa.programs as any;
                     result.programId = sa.program_id;
                     result.programName = programData?.name || sa.alias;

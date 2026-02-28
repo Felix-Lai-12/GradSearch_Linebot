@@ -192,7 +192,11 @@ async function executeAutoFix(parsed: BugFixResult): Promise<BugFixResult> {
                 program_id: programs[0].program_id,
                 alias: parsed.new_alias
             });
-            if (error) return { ...parsed, success: false, message: '新增系所 Alias 失敗' };
+            if (error) {
+                console.error('Failed to insert program alias:', error);
+                return { ...parsed, success: false, message: `新增系所 Alias 失敗: ${error.message}` };
+            }
+            console.log(`Successfully added alias "${parsed.new_alias}" for program ${programs[0].program_id}`);
             return { ...parsed, success: true, message: '已成功新增系所關鍵字' };
         } else {
             // 學校 Alias

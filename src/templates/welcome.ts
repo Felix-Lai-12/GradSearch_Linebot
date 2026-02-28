@@ -96,7 +96,7 @@ export function createWelcomeMessage(): FlexMessage {
                             },
                             {
                                 type: 'text',
-                                text: '🧭 想先聊聊再推薦系所',
+                                text: '🧭 跟 AI聊聊再推薦系所',
                                 size: 'sm',
                                 color: '#555555',
                                 margin: 'xs',
@@ -165,7 +165,7 @@ export function createWelcomeMessage(): FlexMessage {
                         action: {
                             type: 'message',
                             label: '🎓 完整功能介紹',
-                            text: '/help'
+                            text: '/intro'
                         },
                         style: 'link',
                         height: 'sm',

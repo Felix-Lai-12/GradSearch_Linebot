@@ -33,16 +33,16 @@ jobs:
       - name: 'Deploy to Cloud Functions'
         uses: 'google-github-actions/deploy-cloud-functions@v3'
         with:
-          name: 'gradsearch-webhook'
+          name: 'gradsearch-linebot'
           runtime: 'nodejs24'
           region: 'asia-east1'
           source_dir: '.'
-          entry_point: 'gradsearch'
-          # Use the same flags as in deploy.sh
-          flags: '--gen2 --min-instances=1 --max-instances=10 --allow-unauthenticated'
-          env_vars: |-
+          entry_point: 'handleRequest'
+          min_instance_count: 1
+          max_instance_count: 5
+          environment_variables: |-
+            NODE_ENV=production
             LINE_CHANNEL_ACCESS_TOKEN=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
             LINE_CHANNEL_SECRET=${{ secrets.LINE_CHANNEL_SECRET }}
             SUPABASE_URL=${{ secrets.SUPABASE_URL }}
             SUPABASE_SERVICE_KEY=${{ secrets.SUPABASE_SERVICE_KEY }}
-            FIRECRAWL_API_KEY=${{ secrets.FIRECRAWL_API_KEY }}

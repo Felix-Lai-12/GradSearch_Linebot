@@ -99,49 +99,15 @@ async function handleTextMessage(
     const userText = event.message.text.trim();
     const lineUserId = event.source.userId || null;
 
-    // Special commands (Welcome Message)
+    // --- 🔹 1. 導覽與幫助指令 (Navigation & Help) ---
+
+    // [幫助/說明]: 傳送歡迎操作指南
     if (userText === '幫助' || userText === '說明' || userText === 'help') {
         const welcomeMessage = createWelcomeMessage();
         return client.replyMessage(event.replyToken, welcomeMessage);
     }
 
-    // Handle 許願 (feature request)
-    if (userText.startsWith('/wish')) {
-        const wish = userText.replace('/wish', '').trim();
-        if (!wish) {
-            return client.replyMessage(event.replyToken, {
-                type: 'text',
-                text: '請在 /wish 後面加上你的建議內容喔！\n例如：/wish 我想要查詢考古題'
-            });
-        }
-        const result = await createGitHubIssue('feature', wish, lineUserId || 'anonymous');
-        return client.replyMessage(event.replyToken, {
-            type: 'text',
-            text: result.success
-                ? `✅ 已收到你的許願！我們會盡快審核並考慮加入此功能。\n\n📋 追蹤進度：${result.issueUrl}`
-                : '❌ 許願提交失敗，請稍後再試。'
-        });
-    }
-
-    // Handle 回報 (bug report)
-    if (userText.startsWith('/bug')) {
-        const bug = userText.replace('/bug', '').trim();
-        if (!bug) {
-            return client.replyMessage(event.replyToken, {
-                type: 'text',
-                text: '請在 /bug 後面加上問題描述喔！\n例如：/bug 搜尋台大資工沒有反應'
-            });
-        }
-        const result = await createGitHubIssue('bug', bug, lineUserId || 'anonymous');
-        return client.replyMessage(event.replyToken, {
-            type: 'text',
-            text: result.success
-                ? `✅ 已收到你的回報！我們會盡快處理此問題。\n\n📋 追蹤進度：${result.issueUrl}`
-                : '❌ 回報提交失敗，請稍後再試。'
-        });
-    }
-
-    // Handle 介紹 & /help (Introduction Flow)
+    // [介紹/使命]: 傳送 GradSearch 使命與功能介紹
     if (userText === '介紹' || userText === '/intro' || userText === '/help') {
         return client.replyMessage(event.replyToken, {
             type: 'flex',
@@ -240,7 +206,7 @@ async function handleTextMessage(
                             type: 'button',
                             action: {
                                 type: 'message',
-                                label: '🧭 想先聊聊再推薦',
+                                label: '🧭 跟 AI 聊聊再推薦',
                                 text: '/chat'
                             },
                             style: 'secondary',
@@ -251,7 +217,7 @@ async function handleTextMessage(
                             type: 'button',
                             action: {
                                 type: 'uri',
-                                label: '🔗 GitHub 專案原始碼',
+                                label: '🔗 查看 GitHub 專案原始碼',
                                 uri: 'https://github.com/Felix-Lai-12/GradSearch_Linebot'
                             },
                             style: 'link',
@@ -265,6 +231,9 @@ async function handleTextMessage(
         });
     }
 
+    // --- 🔹 2. 模式切換指令 (Mode Switching) ---
+
+    // [切換至搜尋模式]
     if (userText === '/search') {
         if (lineUserId) await setUserState(lineUserId, 'SEARCH');
         return client.replyMessage(event.replyToken, {
@@ -273,29 +242,55 @@ async function handleTextMessage(
         });
     }
 
+    // [切換至 AI 聊天模式]
     if (userText === '/chat') {
         if (lineUserId) await setUserState(lineUserId, 'AI_CHAT');
         return client.replyMessage(event.replyToken, {
             type: 'text',
-            text: '💡 你好！我是你的專屬升學顧問。\n你可以告訴我你的背景、興趣或任何選校的問題，我會為你推薦 3 個合適的系所。\n例如：「我是私立資管系，想要考好找工作的國立大學所」'
+            text: '💡 你好！我是你的專屬升學顧問。\n您可以告訴我您的背景、興趣或任何問題，我會為您推薦合適的系所。\n例如：「我是私立資管系，想要考好找工作的國立大學所」'
         });
     }
 
+    // --- 🔹 3. 回饋與互動指令 (Feedback & Interaction) ---
+
+    // [許願/功能建議]
     if (userText.startsWith('/wish')) {
+        const wish = userText.replace('/wish', '').trim();
+        if (!wish) {
+            return client.replyMessage(event.replyToken, {
+                type: 'text',
+                text: '請在 /wish 後面加上你的建議內容喔！\n例如：/wish 我想要查詢考古題'
+            });
+        }
+        const result = await createGitHubIssue('feature', wish, lineUserId || 'anonymous');
         return client.replyMessage(event.replyToken, {
             type: 'text',
-            text: '✨ 謝謝您的建議！我們已經收到您的許願，開發團隊會盡快評估是否加入此功能喔！'
+            text: result.success
+                ? `✅ 已收到你的許願！我們會盡快審核並考慮加入此功能。\n\n📋 追蹤進度：${result.issueUrl}`
+                : '❌ 許願提交失敗，請稍後再試。'
         });
     }
 
+    // [回報/錯誤回修]
     if (userText.startsWith('/bug')) {
+        const bug = userText.replace('/bug', '').trim();
+        if (!bug) {
+            return client.replyMessage(event.replyToken, {
+                type: 'text',
+                text: '請在 /bug 後面加上問題描述喔！\n例如：/bug 搜尋台大資工沒有反應'
+            });
+        }
+        const result = await createGitHubIssue('bug', bug, lineUserId || 'anonymous');
         return client.replyMessage(event.replyToken, {
             type: 'text',
-            text: '🐛 感謝您的回報！我們已經記錄下這個問題，會盡快進行修正以提供更好的服務。'
+            text: result.success
+                ? `✅ 已收到你的回報！我們會盡快處理此問題。\n\n📋 追蹤進度：${result.issueUrl}`
+                : '❌ 回報提交失敗，請稍後再試。'
         });
     }
 
-    if (userText === '收藏' || userText === '我的收藏') {
+    // [查看我的收藏]
+    if (userText === '收藏' || userText === '我的收藏' || userText === '/fav') {
         if (!lineUserId) return null;
         const favorites = await getFavorites(lineUserId);
         const flexMessage = createFavoritesListMessage(favorites);

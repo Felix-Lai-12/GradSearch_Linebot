@@ -9,8 +9,11 @@ import {
 } from '@line/bot-sdk';
 import { createWelcomeMessage } from '../templates/welcome';
 import { createSearchResultMessage, createSuggestionsMessage } from '../templates/search_result';
+import { createFavoritesListMessage } from '../templates/favorites';
 import { searchProgram, logSearch } from '../services/search';
+import { toggleFavorite, getFavorites } from '../services/favorite';
 import { supabase } from '../db/supabase';
+import { URLSearchParams } from 'url';
 
 export async function handleEvent(
     client: Client,
@@ -26,10 +29,9 @@ export async function handleEvent(
         return handleTextMessage(client, event as MessageEvent & { message: TextEventMessage });
     }
 
-    // Handle postback events (for future: favorites, pagination)
+    // Handle postback events (for favorites, pagination)
     if (event.type === 'postback') {
-        // Phase 3: handle postback actions
-        return null;
+        return handlePostback(client, event);
     }
 
     return null;
@@ -82,13 +84,11 @@ async function handleTextMessage(
         return client.replyMessage(event.replyToken, welcomeMessage);
     }
 
-    if (userText === '收藏') {
-        // Phase 3: show favorites list
-        const reply: TextMessage = {
-            type: 'text',
-            text: '⭐ 收藏功能即將上線，敬請期待！',
-        };
-        return client.replyMessage(event.replyToken, reply);
+    if (userText === '收藏' || userText === '我的收藏') {
+        if (!lineUserId) return null;
+        const favorites = await getFavorites(lineUserId);
+        const flexMessage = createFavoritesListMessage(favorites);
+        return client.replyMessage(event.replyToken, flexMessage);
     }
 
     // Keyword search
@@ -136,4 +136,41 @@ async function handleTextMessage(
         };
         return client.replyMessage(event.replyToken, reply);
     }
+}
+/**
+ * Handle postback events (e.g., toggle favorite)
+ */
+async function handlePostback(
+    client: Client,
+    event: any
+): Promise<MessageAPIResponseBase | null> {
+    const data = event.postback.data;
+    const params = new URLSearchParams(data);
+    const action = params.get('action');
+    const lineUserId = event.source.userId;
+
+    if (!lineUserId) return null;
+
+    if (action === 'favorite') {
+        const programId = params.get('program_id');
+        if (!programId) return null;
+
+        try {
+            const added = await toggleFavorite(lineUserId, programId);
+            const replyText = added ? '✅ 已成功加入收藏！' : '🗑️ 已從收藏中移除。';
+
+            // Postback can reply with a standard text or just do nothing (browser will show nothing)
+            // But usually we reply with a simple confirmation
+            const reply: TextMessage = {
+                type: 'text',
+                text: replyText,
+            };
+            return client.replyMessage(event.replyToken, reply);
+        } catch (err) {
+            console.error('Favorite toggle error:', err);
+            return null;
+        }
+    }
+
+    return null;
 }

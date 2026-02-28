@@ -2,11 +2,11 @@ export async function createGitHubIssue(
     type: 'feature' | 'bug',
     content: string,
     userId: string
-): Promise<boolean> {
+): Promise<{ success: boolean; issueUrl?: string }> {
     const token = process.env.GH_ISSUES_TOKEN;
     if (!token) {
         console.error('GH_ISSUES_TOKEN not set');
-        return false;
+        return { success: false };
     }
 
     const title = type === 'bug'
@@ -30,14 +30,14 @@ export async function createGitHubIssue(
 
         if (!response.ok) {
             console.error('Failed to create issue:', await response.text());
-            return false;
+            return { success: false };
         }
 
         const issue = await response.json() as { number: number, html_url: string };
         console.log(`Created issue #${issue.number}: ${issue.html_url}`);
-        return true;
+        return { success: true, issueUrl: issue.html_url };
     } catch (error) {
         console.error('Error creating GitHub issue:', error);
-        return false;
+        return { success: false };
     }
 }

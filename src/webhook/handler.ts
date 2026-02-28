@@ -114,11 +114,11 @@ async function handleTextMessage(
                 text: '請在 /wish 後面加上你的建議內容喔！\n例如：/wish 我想要查詢考古題'
             });
         }
-        const success = await createGitHubIssue('feature', wish, lineUserId || 'anonymous');
+        const result = await createGitHubIssue('feature', wish, lineUserId || 'anonymous');
         return client.replyMessage(event.replyToken, {
             type: 'text',
-            text: success
-                ? '✅ 已收到你的許願！我們會盡快審核並考慮加入此功能。'
+            text: result.success
+                ? `✅ 已收到你的許願！我們會盡快審核並考慮加入此功能。\n\n📋 追蹤進度：${result.issueUrl}`
                 : '❌ 許願提交失敗，請稍後再試。'
         });
     }
@@ -132,11 +132,11 @@ async function handleTextMessage(
                 text: '請在 /bug 後面加上問題描述喔！\n例如：/bug 搜尋台大資工沒有反應'
             });
         }
-        const success = await createGitHubIssue('bug', bug, lineUserId || 'anonymous');
+        const result = await createGitHubIssue('bug', bug, lineUserId || 'anonymous');
         return client.replyMessage(event.replyToken, {
             type: 'text',
-            text: success
-                ? '✅ 已收到你的回報！我們會盡快處理此問題。'
+            text: result.success
+                ? `✅ 已收到你的回報！我們會盡快處理此問題。\n\n📋 追蹤進度：${result.issueUrl}`
                 : '❌ 回報提交失敗，請稍後再試。'
         });
     }

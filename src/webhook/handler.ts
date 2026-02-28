@@ -280,13 +280,43 @@ async function handleTextMessage(
                 text: '請在 /bug 後面加上問題描述喔！\n例如：/bug 搜尋台大資工沒有反應'
             });
         }
-        const result = await createGitHubIssue('bug', bug, lineUserId || 'anonymous');
-        return client.replyMessage(event.replyToken, {
-            type: 'text',
-            text: result.success
-                ? `✅ 已收到你的回報！我們會盡快處理此問題。\n\n📋 追蹤進度：${result.issueUrl}`
-                : '❌ 回報提交失敗，請稍後再試。'
-        });
+
+        // 發送 Loading 動畫
+        if (lineUserId) {
+            try {
+                await fetch('https://api.line.me/v2/bot/chat/loading/start', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${process.env.LINE_CHANNEL_ACCESS_TOKEN}`
+                    },
+                    body: JSON.stringify({ chatId: lineUserId, loadingSeconds: 20 })
+                });
+            } catch (e) {
+                console.error('Failed to send loading start', e);
+            }
+        }
+
+        const { processBugReport } = await import('../services/ai_bug_fixer');
+        const fixResult = await processBugReport(bug);
+
+        if (fixResult.is_fixable && fixResult.success) {
+            // Optional: still log to GitHub for awareness
+            await createGitHubIssue('bug', `[AUTO-FIXED] ${bug}\n\nApplied fix: ${JSON.stringify(fixResult)}`, lineUserId || 'anonymous');
+            return client.replyMessage(event.replyToken, {
+                type: 'text',
+                text: `✨ 感謝回報！系統 AI 已嘗試自動修復此問題！\n📝 處理結果：${fixResult.message}\n您可以嘗試重新查詢看看！`
+            });
+        } else {
+            // Fallback
+            const result = await createGitHubIssue('bug', `${bug}\n\n[Auto-Fix Failed] Reason: ${fixResult.message}`, lineUserId || 'anonymous');
+            return client.replyMessage(event.replyToken, {
+                type: 'text',
+                text: result.success
+                    ? `🤖 AI 自動修復嘗試失敗或資訊不足 (原因: ${fixResult.message || '未知'})。\n已將您的回報記錄至開發團隊待辦清單，我們會盡快人工確認！\n📋 追蹤進度：${result.issueUrl}`
+                    : '❌ 回報提交失敗，請稍後再試。'
+            });
+        }
     }
 
     // [查看我的收藏]

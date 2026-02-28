@@ -73,7 +73,24 @@ const schoolSchedules = [
         interview_dates: '114/11/22',
         first_result_announce_date: '114/11/20',
         second_result_announce_date: '114/12/10',
-        brochure_url: 'https://www.ncut.edu.tw/'
+        brochure_url: 'https://drive.google.com/file/d/1E2dJVsX56Lp4SIC89YA3N8KlolDd7AKi/view?usp=drive_link'
+    },
+    {
+        school_name: '國立中央大學',
+        apply_start_date: '114/09/30',
+        apply_end_date: '114/10/07',
+        interview_dates: '114/10-114/11',
+        first_result_announce_date: '114/11/07',
+        second_result_announce_date: '114/11/21',
+        brochure_url: 'https://admission.ncu.edu.tw/files/system/files/57143/%E7%94%84%E8%A9%A6%E7%B0%A1%E7%AB%A0/%E5%85%B1%E5%90%8C/00-115%E7%A2%A9%E5%8D%9A%E7%94%84%E8%A9%A6%E7%B0%A1%E7%AB%A0.pdf'
+    },
+    {
+        school_name: '元智大學',
+        apply_start_date: '114/10/15',
+        apply_end_date: '114/10/29',
+        interview_dates: '114/11',
+        first_result_announce_date: '114/11/28',
+        brochure_url: 'https://www.yzu.edu.tw/admissions/files/AA/aplexam/115%E7%A2%A9%E5%8D%9A%E5%A3%AB%E7%94%84%E8%A9%A6%E5%85%A5%E5%AD%B8%E7%B0%A1%E7%AB%A0.pdf'
     },
 ];
 

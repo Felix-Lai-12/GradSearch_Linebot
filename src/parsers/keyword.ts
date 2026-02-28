@@ -57,7 +57,7 @@ export async function parseKeyword(text: string): Promise<ParsedQuery> {
     // If a school was identified, we only fetch program aliases for that school to reduce collisions
     let query = supabase
         .from('program_aliases')
-        .select('alias, program_id, programs!inner(name, school_id)');
+        .select('alias, program_id, programs!inner(name, school_id, degree)');
 
     if (result.schoolId) {
         query = query.eq('programs.school_id', result.schoolId);
@@ -66,8 +66,19 @@ export async function parseKeyword(text: string): Promise<ParsedQuery> {
     const { data: programAliases } = await query;
 
     if (programAliases && programAliases.length > 0) {
-        // Sort program aliases by max length
-        const sortedPrograms = programAliases.sort((a, b) => b.alias.length - a.alias.length);
+        // Sort program aliases by:
+        // 1. Max length of alias (longer match is better)
+        // 2. Degree (prefer Master's/碩士 over Doctoral/博士)
+        const sortedPrograms = programAliases.sort((a, b) => {
+            if (b.alias.length !== a.alias.length) {
+                return b.alias.length - a.alias.length;
+            }
+            const degreeA = (a.programs as any)?.degree || '';
+            const degreeB = (b.programs as any)?.degree || '';
+            if (degreeA === '碩士' && degreeB !== '碩士') return -1;
+            if (degreeB === '碩士' && degreeA !== '碩士') return 1;
+            return 0;
+        });
 
         // Clean remaining text (remove "所", "學系", etc. at the end)
         const cleanedRemaining = result.remainingText
@@ -89,13 +100,10 @@ export async function parseKeyword(text: string): Promise<ParsedQuery> {
                     const programData = sa.programs as any;
                     result.programId = sa.program_id;
                     result.programName = programData?.name || sa.alias;
-                    // Note: if user just typed '資工所', it assigns the first one it finds. 
-                    // But if they typed '中山資工', schoolId is set so programs inner query is already filtered!
 
-                    // If no school was matched, assign the inferred school here (if there's only one, we just take it)
+                    // If no school was matched, assign the inferred school
                     if (!result.schoolId && programData?.school_id) {
                         result.schoolId = programData.school_id;
-                        // Not fetching school name to save query, but it could be looked up if needed
                     }
 
                     // Remove matched alias from remaining text

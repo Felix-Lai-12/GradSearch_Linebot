@@ -305,7 +305,7 @@ async function handleTextMessage(
             await createGitHubIssue('bug', `[AUTO-FIXED] ${bug}\n\nApplied fix: ${JSON.stringify(fixResult)}`, lineUserId || 'anonymous');
             return client.replyMessage(event.replyToken, {
                 type: 'text',
-                text: `✨ 感謝回報！系統 AI 已嘗試自動修復此問題！\n📝 處理結果：${fixResult.message}\n您可以嘗試重新查詢看看！`
+                text: `✨ 感謝回報！系統 AI 已嘗試自動修復此問題！\n📝 處理結果：${fixResult.message}\n（請注意：由於系統快取與同步機制，修復可能需要幾分鐘才會完全生效，您可以稍後再重新查詢看看！）`
             });
         } else {
             // Fallback

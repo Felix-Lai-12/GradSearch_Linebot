@@ -1,5 +1,6 @@
 import { checkAndConsumeQuota } from './quota';
-import { GoogleGenAI, Type, Schema } from '@google/genai';
+import { GoogleGenAI, Type, Schema, Content } from '@google/genai';
+import { getOrInitHistory, appendChatHistory, ChatMessage } from './chat_history';
 
 // Initialize the API outside so it's ready. If key is missing, throw on first use.
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
@@ -36,12 +37,12 @@ export async function getRecommendations(userId: string, userMessage: string): P
 
     try {
         // 第一選擇模式：gemini-2.5-flash
-        return await invokeGeminiModel('gemini-2.5-flash', userMessage);
+        return await invokeGeminiModel('gemini-2.5-flash', userId, userMessage);
     } catch (error: any) {
         console.warn('First model failed, falling back to gemini-2.0-flash:', error.message);
         try {
             // 降級模式
-            return await invokeGeminiModel('gemini-2.0-flash', userMessage);
+            return await invokeGeminiModel('gemini-2.0-flash', userId, userMessage);
         } catch (fbError: any) {
             console.error('Fallback model also failed:', fbError.message);
             return null;
@@ -49,7 +50,7 @@ export async function getRecommendations(userId: string, userMessage: string): P
     }
 }
 
-async function invokeGeminiModel(modelName: string, message: string): Promise<AiResponse> {
+async function invokeGeminiModel(modelName: string, userId: string, message: string): Promise<AiResponse> {
     const responseSchema: Schema = {
         type: Type.OBJECT,
         description: "AI response containing either a chat message or recommendations",
@@ -89,9 +90,16 @@ async function invokeGeminiModel(modelName: string, message: string): Promise<Ai
         required: ["response_type", "reply_message"]
     };
 
+    const { chatHistoryId, messages } = await getOrInitHistory(userId);
+
+    const contents: Content[] = [
+        ...messages,
+        { role: 'user', parts: [{ text: message }] }
+    ];
+
     const response = await ai.models.generateContent({
         model: modelName,
-        contents: message,
+        contents: contents,
         config: {
             systemInstruction: SYSTEM_PROMPT,
             responseMimeType: 'application/json',
@@ -103,5 +111,10 @@ async function invokeGeminiModel(modelName: string, message: string): Promise<Ai
     const text = response.text;
     if (!text) throw new Error('Empty response from model');
 
-    return JSON.parse(text) as AiResponse;
+    const result = JSON.parse(text) as AiResponse;
+
+    // Save history (save the raw text from the model so it matches JSON schema natively on next turn)
+    await appendChatHistory(chatHistoryId, messages, message, text);
+
+    return result;
 }

@@ -3,14 +3,14 @@ import { supabase } from '../db/supabase';
 const MAX_FREE_CHAT = 10;
 
 /**
- * Ensures the user has a quota record for today. 
+ * Ensures the user has a state/quota record for today. 
  * If the record is from a previous day, resets the count.
  */
 async function initializeUserQuota(userId: string) {
     const todayStr = new Date().toISOString().split('T')[0];
 
     const { data: record, error } = await supabase
-        .from('user_quotas')
+        .from('user_states')
         .select('*')
         .eq('user_id', userId)
         .single();
@@ -22,7 +22,7 @@ async function initializeUserQuota(userId: string) {
 
     if (!record) {
         // Create new record
-        await supabase.from('user_quotas').insert({
+        await supabase.from('user_states').insert({
             user_id: userId,
             tier: 'free',
             chat_count: 0,
@@ -33,7 +33,7 @@ async function initializeUserQuota(userId: string) {
         // Check if we need to reset
         if (record.last_reset_date !== todayStr) {
             await supabase
-                .from('user_quotas')
+                .from('user_states')
                 .update({ chat_count: 0, last_reset_date: todayStr })
                 .eq('user_id', userId);
         }
@@ -49,7 +49,7 @@ export async function checkAndConsumeQuota(userId: string): Promise<boolean> {
     await initializeUserQuota(userId);
 
     const { data: record } = await supabase
-        .from('user_quotas')
+        .from('user_states')
         .select('*')
         .eq('user_id', userId)
         .single();
@@ -65,7 +65,7 @@ export async function checkAndConsumeQuota(userId: string): Promise<boolean> {
 
     // Increment count
     await supabase
-        .from('user_quotas')
+        .from('user_states')
         .update({ chat_count: record.chat_count + 1 })
         .eq('user_id', userId);
 
@@ -79,7 +79,7 @@ export async function getUserQuotaStatus(userId: string) {
     await initializeUserQuota(userId);
 
     const { data: record } = await supabase
-        .from('user_quotas')
+        .from('user_states')
         .select('*')
         .eq('user_id', userId)
         .single();

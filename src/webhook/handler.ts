@@ -99,7 +99,7 @@ async function handleTextMessage(
     const userText = event.message.text.trim();
     const lineUserId = event.source.userId || null;
 
-    // Special commands
+    // Special commands (Welcome Message)
     if (userText === '幫助' || userText === '說明' || userText === 'help') {
         const welcomeMessage = createWelcomeMessage();
         return client.replyMessage(event.replyToken, welcomeMessage);
@@ -141,8 +141,8 @@ async function handleTextMessage(
         });
     }
 
-    // Handle 介紹 (Introduction)
-    if (userText === '介紹' || userText === '/intro') {
+    // Handle 介紹 & /help (Introduction Flow)
+    if (userText === '介紹' || userText === '/intro' || userText === '/help') {
         return client.replyMessage(event.replyToken, {
             type: 'flex',
             altText: 'GradSearch 完整功能介紹',
@@ -228,12 +228,35 @@ async function handleTextMessage(
                         {
                             type: 'button',
                             action: {
+                                type: 'message',
+                                label: '🔍 查詢系所資訊',
+                                text: '/search'
+                            },
+                            style: 'primary',
+                            color: '#1a73e8',
+                            height: 'sm'
+                        },
+                        {
+                            type: 'button',
+                            action: {
+                                type: 'message',
+                                label: '🧭 想先聊聊再推薦',
+                                text: '/chat'
+                            },
+                            style: 'secondary',
+                            height: 'sm',
+                            margin: 'sm'
+                        },
+                        {
+                            type: 'button',
+                            action: {
                                 type: 'uri',
-                                label: '🔗 查看 GitHub 專案原始碼',
+                                label: '🔗 GitHub 專案原始碼',
                                 uri: 'https://github.com/Felix-Lai-12/GradSearch_Linebot'
                             },
                             style: 'link',
-                            height: 'sm'
+                            height: 'sm',
+                            margin: 'sm'
                         }
                     ],
                     paddingAll: '15px'

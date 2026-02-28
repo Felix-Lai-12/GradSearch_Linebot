@@ -35,37 +35,17 @@ export function createWelcomeMessage(): FlexMessage {
                 contents: [
                     {
                         type: 'text',
-                        text: '歡迎使用 GradSearch！',
+                        text: '歡迎使用 GradSearch 🎓',
                         weight: 'bold',
                         size: 'md',
                         margin: 'md',
                     },
                     {
                         type: 'text',
-                        text: '我可以幫你查詢台灣研究所的申請資訊，包含截止日期、報名費、備審資料等。',
-                        size: 'sm',
-                        color: '#555555',
-                        margin: 'md',
-                        wrap: true,
-                    },
-                    {
-                        type: 'separator',
-                        margin: 'lg',
-                    },
-                    {
-                        type: 'text',
-                        text: '💡 使用方式',
-                        weight: 'bold',
-                        size: 'sm',
-                        margin: 'lg',
-                    },
-                    {
-                        type: 'text',
-                        text: '直接輸入「校名 + 系所」就能查詢',
+                        text: '用 1 分鐘找到研究所申請重點：',
                         size: 'sm',
                         color: '#555555',
                         margin: 'sm',
-                        wrap: true,
                     },
                     {
                         type: 'box',
@@ -73,22 +53,22 @@ export function createWelcomeMessage(): FlexMessage {
                         contents: [
                             {
                                 type: 'text',
-                                text: '台大國企所',
+                                text: '📌 簡章 / 截止日 / 報名費',
                                 size: 'sm',
-                                color: '#1a73e8',
+                                color: '#1a1a2e',
                             },
                             {
                                 type: 'text',
-                                text: '清大資工',
+                                text: '🗂️ 備審與面試時程整理',
                                 size: 'sm',
-                                color: '#1a73e8',
+                                color: '#1a1a2e',
                                 margin: 'xs',
                             },
                             {
                                 type: 'text',
-                                text: '成大電機所',
+                                text: '🧭 研究所升學方向 AI 諮詢',
                                 size: 'sm',
-                                color: '#1a73e8',
+                                color: '#1a1a2e',
                                 margin: 'xs',
                             },
                         ],
@@ -98,15 +78,56 @@ export function createWelcomeMessage(): FlexMessage {
                         cornerRadius: '8px',
                     },
                     {
+                        type: 'text',
+                        text: '你現在要：',
+                        weight: 'bold',
+                        size: 'sm',
+                        margin: 'lg',
+                    },
+                    {
+                        type: 'box',
+                        layout: 'vertical',
+                        contents: [
+                            {
+                                type: 'text',
+                                text: '🔍 查系所資訊（直接輸入「校名 + 系所」）',
+                                size: 'sm',
+                                color: '#555555',
+                            },
+                            {
+                                type: 'text',
+                                text: '🧭 想先聊聊再推薦系所',
+                                size: 'sm',
+                                color: '#555555',
+                                margin: 'xs',
+                            },
+                        ],
+                        margin: 'sm',
+                    },
+                    {
+                        type: 'text',
+                        text: '快速試試：',
+                        weight: 'bold',
+                        size: 'sm',
+                        margin: 'lg',
+                    },
+                    {
+                        type: 'text',
+                        text: '「台大國企所」／「清大資工所」／「成大電機所」',
+                        size: 'xs',
+                        color: '#1a73e8',
+                        margin: 'sm',
+                    },
+                    {
                         type: 'separator',
                         margin: 'lg',
                     },
                     {
                         type: 'text',
-                        text: '輸入 /search 可以直接查詢特定系所\n輸入 /chat 啟動專業升學顧問諮詢\n輸入 /wish 告訴我們你還希望增加什麼功能\n輸入 /bug 回報資訊錯誤、連結無法正常開啟',
-                        size: 'xs',
-                        color: '#666666',
-                        margin: 'sm',
+                        text: '回饋審核通過 1 分鐘上線：/bug 回報問題 ｜/wish 許願\n*本服務由 AI 生成與整理資訊，請以各校官方公告為準。',
+                        size: 'xxs',
+                        color: '#999999',
+                        margin: 'md',
                         wrap: true,
                     },
                 ],
@@ -120,7 +141,7 @@ export function createWelcomeMessage(): FlexMessage {
                         type: 'button',
                         action: {
                             type: 'message',
-                            label: '🔍 直接查詢特定系所',
+                            label: '🔍 查詢系所資訊',
                             text: '/search'
                         },
                         style: 'primary',
@@ -132,7 +153,7 @@ export function createWelcomeMessage(): FlexMessage {
                         type: 'button',
                         action: {
                             type: 'message',
-                            label: '💬 我還不確定想先聊聊',
+                            label: '🧭 想先聊聊再推薦',
                             text: '/chat'
                         },
                         style: 'secondary',

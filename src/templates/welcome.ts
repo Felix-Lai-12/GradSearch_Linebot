@@ -20,7 +20,7 @@ export function createWelcomeMessage(): FlexMessage {
                     },
                     {
                         type: 'text',
-                        text: '台灣研究所查詢小幫手',
+                        text: '全台研究所申請查詢助理',
                         size: 'sm',
                         color: '#666666',
                         margin: 'sm',
@@ -35,17 +35,10 @@ export function createWelcomeMessage(): FlexMessage {
                 contents: [
                     {
                         type: 'text',
-                        text: '歡迎使用 GradSearch 🎓',
+                        text: '用 1 分鐘找到研究所申請重點 🎓',
                         weight: 'bold',
                         size: 'md',
                         margin: 'md',
-                    },
-                    {
-                        type: 'text',
-                        text: '用 1 分鐘找到研究所申請重點：',
-                        size: 'sm',
-                        color: '#555555',
-                        margin: 'sm',
                     },
                     {
                         type: 'box',
@@ -53,20 +46,20 @@ export function createWelcomeMessage(): FlexMessage {
                         contents: [
                             {
                                 type: 'text',
-                                text: '📌 簡章 / 截止日 / 報名費',
+                                text: '• 簡章 / 截止日 / 報名費',
                                 size: 'sm',
                                 color: '#1a1a2e',
                             },
                             {
                                 type: 'text',
-                                text: '🗂️ 備審與面試時程整理',
+                                text: '• 備審與面試時程整理',
                                 size: 'sm',
                                 color: '#1a1a2e',
                                 margin: 'xs',
                             },
                             {
                                 type: 'text',
-                                text: '🧭 研究所升學方向 AI 諮詢',
+                                text: '• 研究所升學方向 AI 諮詢',
                                 size: 'sm',
                                 color: '#1a1a2e',
                                 margin: 'xs',
@@ -79,7 +72,7 @@ export function createWelcomeMessage(): FlexMessage {
                     },
                     {
                         type: 'text',
-                        text: '你現在要：',
+                        text: '你現在可以：',
                         weight: 'bold',
                         size: 'sm',
                         margin: 'lg',
@@ -96,7 +89,7 @@ export function createWelcomeMessage(): FlexMessage {
                             },
                             {
                                 type: 'text',
-                                text: '🧭 跟 AI聊聊再推薦系所',
+                                text: '💬 跟 AI 聊聊再推薦系所',
                                 size: 'sm',
                                 color: '#555555',
                                 margin: 'xs',
@@ -124,8 +117,8 @@ export function createWelcomeMessage(): FlexMessage {
                     },
                     {
                         type: 'text',
-                        text: '/bug 回報問題，/wish 功能許願\n*本服務由 AI 生成與整理資訊，請以各校官方公告為準。',
-                        size: 'xxs',
+                        text: '其他指令：/bug 回報問題，/wish 功能許願\n*本服務由 AI 生成與整理資訊，請以各校官方公告為準。',
+                        size: 'xs',
                         color: '#999999',
                         margin: 'md',
                         wrap: true,
